@@ -60,6 +60,7 @@ void Led_Alarm_Disable(uint8_t count,uint8_t sec)
     rt_lptimer_stop(&alarm_timer);
     agile_led_stop(alarm_led_red);
     agile_led_stop(alarm_beep);
+    rt_pm_sleep_release(PM_LED_ID,PM_SLEEP_MODE_NONE);
 }
 void Led_Alarm_DisableBeep(void)
 {
@@ -69,6 +70,14 @@ void Led_Beep_Powerup(void)
 {
     rt_pm_module_delay_sleep(PM_LED_ID,3000);
     agile_led_start(power_beep);
+    if(Get_Factory_Self_ID())
+    {
+        agile_led_start(power_led_red);
+    }
+    else
+    {
+        agile_led_start(power_led_green);
+    }
 }
 void Led_Init(void)
 {
@@ -92,13 +101,13 @@ void Led_Init(void)
     power_beep = agile_led_create(BUZZER_PIN, 1, "500,1", 1);
 
     rssi_prompt_led = agile_led_create(LED_INTENSITY_GREEN_PIN, 0, "200,600", 2);
-    rssi_low_led = agile_led_create(LED_ON_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
+    rssi_low_led = agile_led_create(LED_ON_RED_PIN, 0, "0,400,200,600,200,1", 1);
     rssi_mid_led = agile_led_create(LED_WARN_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
     rssi_high_led = agile_led_create(LED_OFF_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
     rssi_ultra_led = agile_led_create(LED_DELAY_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
 
     bat_prompt_led = agile_led_create(LED_BAT_GREEN_PIN, 0, "200,600", 2);
-    bat_low_led = agile_led_create(LED_DELAY_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
+    bat_low_led = agile_led_create(LED_DELAY_RED_PIN, 0, "0,400,200,600,200,1", 1);
     bat_mid_led = agile_led_create(LED_OFF_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
     bat_high_led = agile_led_create(LED_WARN_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
     bat_ultra_led = agile_led_create(LED_ON_GREEN_PIN, 0, "0,400,200,600,200,1", 1);
@@ -141,13 +150,13 @@ void led_rssi_show(void)
         agile_led_start(rssi_ultra_led);
         break;
     case 1:
-        agile_led_start(rssi_high_led);
+        agile_led_start(rssi_ultra_led);
         break;
     case 2:
-        agile_led_start(rssi_mid_led);
+        agile_led_start(rssi_high_led);
         break;
     case 3:
-        agile_led_start(rssi_low_led);
+        agile_led_start(rssi_mid_led);
         break;
     case 4:
         agile_led_start(rssi_low_led);
@@ -162,20 +171,20 @@ void led_bat_show(void)
     agile_led_start(bat_prompt_led);
     switch(Get_BAT_Level())
     {
-    case 0:
+    case 0://100
         agile_led_start(bat_ultra_led);
         break;
-    case 1:
-        agile_led_start(bat_high_led);
-        break;
-    case 2:
+    case 1://40
         agile_led_start(bat_mid_led);
         break;
-    case 3:
+    case 2://20
         agile_led_start(bat_low_led);
         break;
-    case 4:
-        agile_led_start(bat_low_led);
+    case 3://80
+        agile_led_start(bat_ultra_led);
+        break;
+    case 4://60
+        agile_led_start(bat_high_led);
         break;
     default:
         break;

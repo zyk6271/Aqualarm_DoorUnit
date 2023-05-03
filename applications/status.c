@@ -93,12 +93,14 @@ void LowPowerEvent_Callback(void *parameter)
 {
     Warning_Status = LowPower;
     Led_Alarm_Enable(1,30);
+    RF_HeartWithMain();
     LOG_I("LowPowerEvent_Callback\r\n");
 }
 void UltraLowPowerEvent_Callback(void *parameter)
 {
     Warning_Status = UltraLowPower;
     Led_Alarm_Enable(1,15);
+    RF_HeartWithMain();
     LOG_I("UltraLowPowerEvent_Callback\r\n");
 }
 void WarningInit(void)

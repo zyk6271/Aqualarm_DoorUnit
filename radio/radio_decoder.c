@@ -19,7 +19,6 @@
 extern uint32_t Self_Id;
 
 uint8_t RSSI_Level;
-uint8_t Delay_Flag;
 
 uint8_t Get_RSSI_Level(void)
 {
@@ -44,20 +43,14 @@ void Set_RSSI_Level(uint8_t value)
         RSSI_Level = 3;
     }
 }
-uint8_t Get_Delay_Flag(void)
-{
-    return Delay_Flag;
-}
-void Set_Delay_Flag(uint8_t value)
-{
-    Delay_Flag = !value;
-}
 void NormalSolve(int rssi,uint8_t *rx_buffer,uint8_t rx_len)
 {
     Message_Format Rx_message = {0};
     if(rx_buffer[rx_len-1]==0x0A&&rx_buffer[rx_len-2]==0x0D)
     {
+        rt_enter_critical();
         sscanf((const char *)&rx_buffer[1],"{%ld,%ld,%d,%d,%d}",&Rx_message.Target_ID,&Rx_message.From_ID,&Rx_message.Counter,&Rx_message.Command,&Rx_message.Data);
+        rt_exit_critical();
         if(Rx_message.Target_ID != Self_Id)return;
         Set_RSSI_Level(rssi);
         LOG_I("Target_ID : %d\r\n",Rx_message.Target_ID);
@@ -93,7 +86,6 @@ void NormalSolve(int rssi,uint8_t *rx_buffer,uint8_t rx_len)
         case 8:
             //Delay
             Beep_Recv();
-            Set_Delay_Flag(Rx_message.Data);
             break;
         default:
             break;

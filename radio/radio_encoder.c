@@ -105,3 +105,14 @@ void RadioQueue_Init(void)
     rf_encode_t = rt_thread_create("radio_send", rf_encode_entry, RT_NULL, 1024, 9, 10);
     if (rf_encode_t)rt_thread_startup(rf_encode_t);
 }
+uint8_t Get_Factory_Self_ID(void)
+{
+    if(Self_Id == 30000000)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}

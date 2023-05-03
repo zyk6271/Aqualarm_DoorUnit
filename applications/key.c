@@ -187,29 +187,21 @@ void Key_Reponse_Callback(void *parameter)
             {
                 RF_Learn_Request();
             }
-            else if(ret & KEY_ON_EVENT)//OFF LONG
+            else if(ret & KEY_ON_EVENT)//ON
             {
                 Led_KeyOn();
                 RF_Open_Valve();
             }
-            else if(ret & KEY_ON_LONG_EVENT)//OFF LONG
+            else if(ret & KEY_ON_LONG_EVENT)//ON LONG
             {
                 led_bat_show();
             }
-            else if(ret & KEY_DELAY_EVENT)//OFF LONG
+            else if(ret & KEY_DELAY_EVENT)//DELAY
             {
-                if(Get_Delay_Flag())
-                {
-                    Led_DelayOn();
-                    RF_Delay_Open();
-                }
-                else
-                {
-                    Led_DelayOff();
-                    RF_Delay_Close();
-                }
+                Led_DelayOff();
+                RF_Delay_Close();
             }
-            else if(ret & KEY_DELAY_LONG_EVENT)//OFF LONG
+            else if(ret & KEY_DELAY_LONG_EVENT)//DELAY LONG
             {
                 led_rssi_show();
             }
