@@ -91,10 +91,9 @@ void rf_encode_entry(void *paramaeter)
 
 void RadioQueue_Init(void)
 {
-//    int *p;
-//    p=(int *)(0x0800FFF0);//这就是已知的地址，要强制类型转换
-//    Self_Id = *p;//从Flash加载ID
-    Self_Id = 0; //加载为空值
+    int *p;
+    p=(int *)(0x0803FFF0);//这就是已知的地址，要强制类型转换
+    Self_Id = *p;//从Flash加载ID
     if (Self_Id == 0xFFFFFFFF || Self_Id == 0)
     {
         Self_Id = Self_Default_Id;
